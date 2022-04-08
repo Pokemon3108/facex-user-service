@@ -14,6 +14,6 @@ data class SystemUserDataModel(
     val name: String,
     val surname: String,
     val email: String,
-    val companyName: String
+    val company: String
 
 )

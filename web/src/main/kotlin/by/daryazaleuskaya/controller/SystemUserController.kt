@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/v1/user")
 class SystemUserController @Autowired constructor(
     private val systemUserService : SystemUserService
 ){
@@ -19,7 +19,7 @@ class SystemUserController @Autowired constructor(
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody user : SystemUserDto) {
-
+    fun createUser(@RequestBody user : SystemUserDto) : SystemUserDto {
+        return systemUserService.createUser(user)
     }
 }

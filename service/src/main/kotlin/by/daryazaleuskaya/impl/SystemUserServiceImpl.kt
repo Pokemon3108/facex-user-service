@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl @Autowired constructor(
+class SystemUserServiceImpl @Autowired constructor(
     private val userAccountRepository: SystemUserAccountRepository
 ) : SystemUserService {
 

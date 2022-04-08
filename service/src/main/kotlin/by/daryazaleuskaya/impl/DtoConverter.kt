@@ -10,7 +10,7 @@ fun SystemUserDto.toSystemUserDataModel() = SystemUserDataModel(
     name = name,
     surname = surname,
     email = email,
-    companyName = companyName
+    company = company
 )
 
 fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
@@ -20,5 +20,5 @@ fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
     name = name,
     surname = surname,
     email = email,
-    companyName = companyName
+    company = company
 )
