@@ -2,14 +2,18 @@ package by.daryazaleuskaya.datamodel
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
-import java.time.LocalDate
 
 @Document
-class UserDetailsModel(
+data class SystemUserDataModel(
 
     @Id
-    val id : Long,
+    val id: String?,
+    val login: String,
+    val password: String,
+
     val name: String,
     val surname: String,
-    val birthDate : LocalDate
-) { }
+    val email: String,
+    val companyName: String
+
+)

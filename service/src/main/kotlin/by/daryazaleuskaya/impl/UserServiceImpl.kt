@@ -1,22 +1,19 @@
 package by.daryazaleuskaya.impl
 
-import by.daryazaleuskaya.DtoConverterService
-import by.daryazaleuskaya.UserService
-import by.daryazaleuskaya.datamodel.UserAccountModel
-import by.daryazaleuskaya.dto.UserDto
-import by.daryazaleuskaya.repos.UserAccountRepository
+import by.daryazaleuskaya.SystemUserService
+import by.daryazaleuskaya.dto.SystemUserDto
+import by.daryazaleuskaya.repos.SystemUserAccountRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl @Autowired constructor(
-    private val dtoConverterService : DtoConverterService<UserAccountModel, UserDto>,
-    private val userAccountRepository: UserAccountRepository
-) : UserService {
+    private val userAccountRepository: SystemUserAccountRepository
+) : SystemUserService {
 
-    override fun createUser(user: UserDto): UserDto {
+    override fun createUser(user: SystemUserDto): SystemUserDto {
 
-        val userModel = dtoConverterService.dtoToDataModel(user);
-        return dtoConverterService.dataModelToDto(userAccountRepository.save(userModel));
+        val userModel = user.toSystemUserDataModel()
+        return userAccountRepository.save(userModel).toSystemUserDto()
     }
 }

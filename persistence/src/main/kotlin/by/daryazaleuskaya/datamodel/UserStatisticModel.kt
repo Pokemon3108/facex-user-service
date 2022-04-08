@@ -10,7 +10,7 @@ class UserStatisticModel(
     @Id
     val id: Long,
 
-    val userId : UserAccountModel,
+    val userId : SystemUserDataModel,
     val attendanceTime: LocalDateTime,
     val attendanceAmount: Int
 )
