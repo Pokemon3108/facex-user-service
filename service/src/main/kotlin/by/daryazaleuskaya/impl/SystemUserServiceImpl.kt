@@ -2,18 +2,29 @@ package by.daryazaleuskaya.impl
 
 import by.daryazaleuskaya.SystemUserService
 import by.daryazaleuskaya.dto.SystemUserDto
-import by.daryazaleuskaya.repos.SystemUserAccountRepository
+import by.daryazaleuskaya.exception.NotFoundResourceException
+import by.daryazaleuskaya.repos.SystemUserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class SystemUserServiceImpl @Autowired constructor(
-    private val userAccountRepository: SystemUserAccountRepository
+    private val userRepository: SystemUserRepository
 ) : SystemUserService {
 
-    override fun createUser(user: SystemUserDto): SystemUserDto {
+    override fun create(user: SystemUserDto): SystemUserDto {
 
         val userModel = user.toSystemUserDataModel()
-        return userAccountRepository.save(userModel).toSystemUserDto()
+        return userRepository.save(userModel).toSystemUserDto()
+    }
+
+    override fun read(id: String): SystemUserDto {
+
+        val userDataModel =  userRepository.findById(id)
+        if (userDataModel.isPresent) {
+            return userDataModel.get().toSystemUserDto()
+        } else {
+            throw NotFoundResourceException()
+        }
     }
 }

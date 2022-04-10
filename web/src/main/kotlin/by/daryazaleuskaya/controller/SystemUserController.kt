@@ -13,13 +13,14 @@ class SystemUserController @Autowired constructor(
 ){
 
     @GetMapping("/{id}")
-    fun readUser(@PathVariable id: String) : SystemUserDto? {
-        return null
+    fun readSystemUser(@PathVariable id: String) : SystemUserDto {
+        return systemUserService.read(id)
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody user : SystemUserDto) : SystemUserDto {
-        return systemUserService.createUser(user)
+    fun createSystemUser(@RequestBody user : SystemUserDto) : SystemUserDto {
+
+        return systemUserService.create(user)
     }
 }

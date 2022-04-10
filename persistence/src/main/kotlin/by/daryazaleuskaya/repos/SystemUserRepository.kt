@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface SystemUserAccountRepository : MongoRepository<SystemUserDataModel, String> {
+interface SystemUserRepository : MongoRepository<SystemUserDataModel, String> {
 
 
 }

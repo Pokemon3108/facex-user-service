@@ -6,5 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 interface SystemUserService {
 
-    fun createUser(user : SystemUserDto) : SystemUserDto
+    fun create(user : SystemUserDto) : SystemUserDto
+
+    fun read(id : String) : SystemUserDto
 }
