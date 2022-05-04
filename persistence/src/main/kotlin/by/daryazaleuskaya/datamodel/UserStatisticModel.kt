@@ -5,12 +5,12 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDateTime
 
 @Document
-class UserStatisticModel(
+data class UserStatisticModel(
 
     @Id
     val id: Long,
 
-    val userId : SystemUserDataModel,
+    val userDataModel : SystemUserDataModel,
     val attendanceTime: LocalDateTime,
     val attendanceAmount: Int
 )

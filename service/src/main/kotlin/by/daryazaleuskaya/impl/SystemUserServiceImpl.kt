@@ -2,7 +2,7 @@ package by.daryazaleuskaya.impl
 
 import by.daryazaleuskaya.SystemUserService
 import by.daryazaleuskaya.dto.SystemUserDto
-import by.daryazaleuskaya.exception.NotFoundResourceException
+import by.daryazaleuskaya.exception.NoSystemUserException
 import by.daryazaleuskaya.repos.SystemUserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -24,7 +24,7 @@ class SystemUserServiceImpl @Autowired constructor(
         if (userDataModel.isPresent) {
             return userDataModel.get().toSystemUserDto()
         } else {
-            throw NotFoundResourceException()
+            throw NoSystemUserException()
         }
     }
 }
