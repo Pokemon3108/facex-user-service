@@ -8,8 +8,13 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.Response
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 
@@ -23,13 +28,17 @@ class RecognizerController {
     @Value("\${facex.image.recognition.user.api}")
     private lateinit var RECOGNITION_USER_API: String
 
-    @PostMapping()
-    fun recognizeFace(@RequestParam("pic") file: MultipartFile): RecognizedPersonModel {
+    @GetMapping("/group/{group}")
+    fun recognizeFace(
+        @RequestParam("pic") file: MultipartFile,
+        @PathVariable(required = true) group: String
+    ): RecognizedPersonModel {
 
         val multipartBody = buildMultiPartBody(file)
 
+        val url = "${RECOGNITION_API}/${group}"
         val request = Request.Builder()
-            .url(RECOGNITION_API)
+            .url(url)
             .post(multipartBody)
             .build()
 
@@ -38,16 +47,14 @@ class RecognizerController {
             .build()
 
         val resp = okHttpClient.newCall(request).execute()
-        val jsonString = resp.body()?.string()
-
-        return jacksonObjectMapper().readerFor(RecognizedPersonModel::class.java).readValue(jsonString)
+        return extractResponseBody(resp)
     }
 
     @GetMapping("/user/{username}")
-    fun recognizeFace(
+    fun recognizeFaceByName(
         @RequestParam("pic") file: MultipartFile,
         @PathVariable(required = true) username: String
-    ) : RecognizedPersonModel  {
+    ): RecognizedPersonModel {
 
         val multipartBody = buildMultiPartBody(file)
 
@@ -62,15 +69,19 @@ class RecognizerController {
             .build()
 
         val resp = okHttpClient.newCall(request).execute()
-        val jsonString = resp.body()?.string()
+        return extractResponseBody(resp)
+    }
 
+    private fun extractResponseBody(resp: Response): RecognizedPersonModel {
+
+        val jsonString = resp.body()?.string()
         if (resp.isSuccessful) {
             return jacksonObjectMapper().readerFor(RecognizedPersonModel::class.java).readValue(jsonString)
         } else {
-            val messageModel = jacksonObjectMapper().readerFor(MessageModel::class.java).readValue<MessageModel>(jsonString)
+            val messageModel =
+                jacksonObjectMapper().readerFor(MessageModel::class.java).readValue<MessageModel>(jsonString)
             throw RecognitionException(messageModel.message, resp.code())
         }
-
     }
 
 }
