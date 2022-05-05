@@ -1,5 +1,7 @@
 package by.daryazaleuskaya.controller
 
+import by.daryazaleuskaya.exception.RecognitionException
+import by.daryazaleuskaya.model.MessageModel
 import by.daryazaleuskaya.model.RecognizedPersonModel
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.MediaType
@@ -41,11 +43,11 @@ class RecognizerController {
         return jacksonObjectMapper().readerFor(RecognizedPersonModel::class.java).readValue(jsonString)
     }
 
-    @PostMapping("/user/{username}")
+    @GetMapping("/user/{username}")
     fun recognizeFace(
         @RequestParam("pic") file: MultipartFile,
         @PathVariable(required = true) username: String
-    ): RecognizedPersonModel {
+    ) : RecognizedPersonModel  {
 
         val multipartBody = buildMultiPartBody(file)
 
@@ -65,9 +67,9 @@ class RecognizerController {
         if (resp.isSuccessful) {
             return jacksonObjectMapper().readerFor(RecognizedPersonModel::class.java).readValue(jsonString)
         } else {
-            return jacksonObjectMapper().readerFor(RecognizedPersonModel::class.java).readValue(jsonString)
+            val messageModel = jacksonObjectMapper().readerFor(MessageModel::class.java).readValue<MessageModel>(jsonString)
+            throw RecognitionException(messageModel.message, resp.code())
         }
-
 
     }
 

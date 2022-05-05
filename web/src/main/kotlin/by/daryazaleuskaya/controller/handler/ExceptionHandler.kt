@@ -1,9 +1,11 @@
 package by.daryazaleuskaya.controller.handler
 
 import by.daryazaleuskaya.exception.NoSystemUserException
+import by.daryazaleuskaya.exception.RecognitionException
 import by.daryazaleuskaya.model.ErrorData
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
@@ -19,6 +21,12 @@ class ExceptionHandler : ResponseEntityExceptionHandler() {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     fun handleNoSystemUserException(noSystemUserException: NoSystemUserException) : ErrorData {
         return ErrorData(SYSTEM_USER_NOT_FOUND)
+    }
+
+    @ExceptionHandler
+    fun handleRecognitionException(recognitionException: RecognitionException) : ResponseEntity<ErrorData> {
+        val body = ErrorData(recognitionException.message)
+        return ResponseEntity<ErrorData>(body, HttpStatus.valueOf(recognitionException.statusCode))
     }
 
 }
