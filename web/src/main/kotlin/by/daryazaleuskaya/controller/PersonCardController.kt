@@ -1,6 +1,7 @@
 package by.daryazaleuskaya.controller
 
 import by.daryazaleuskaya.PersonCardService
+import by.daryazaleuskaya.controller.processor.RequestProcessor
 import by.daryazaleuskaya.dto.PersonCardDto
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -19,7 +20,8 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/v1")
 class PersonCardController @Autowired constructor(
-    private val personCardService: PersonCardService
+    private val personCardService: PersonCardService,
+    private val requestProcessor : RequestProcessor
 ) {
 
     @Value("\${facex.upload.person.image.api}")
@@ -35,7 +37,7 @@ class PersonCardController @Autowired constructor(
     ): String? {
 
         val requestParamNameToFile =  Pair(PIC, file)
-        val multipartBody = buildMultiPartBody(listOf(requestParamNameToFile))
+        val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
         val url = UPLOAD_PERSON_IMAGE_API + "/${username}"
         val request = Request.Builder()
             .url(url)

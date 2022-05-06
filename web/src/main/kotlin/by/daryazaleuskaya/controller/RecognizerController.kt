@@ -1,15 +1,9 @@
 package by.daryazaleuskaya.controller
 
-import by.daryazaleuskaya.exception.RecognitionException
+import by.daryazaleuskaya.controller.processor.RequestProcessor
 import by.daryazaleuskaya.model.ImageComparisonModel
-import by.daryazaleuskaya.model.MessageModel
 import by.daryazaleuskaya.model.RecognizedPersonModel
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -21,7 +15,9 @@ import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/api/v1/recognition")
-class RecognizerController {
+class RecognizerController @Autowired constructor(
+     private val requestProcessor: RequestProcessor
+) {
 
     @Value("\${facex.image.recognition.api}")
     private lateinit var RECOGNITION_API: String
@@ -43,11 +39,11 @@ class RecognizerController {
     ): RecognizedPersonModel {
 
         val requestParamNameToFile =  Pair(PIC, file)
-        val multipartBody = buildMultiPartBody(listOf(requestParamNameToFile))
+        val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
 
         val url = "${RECOGNITION_API}/${group}"
-        val response = createRequest(url, multipartBody)
-        return extractResponseBody(response)
+        val response = requestProcessor.createRequest(url, multipartBody)
+        return requestProcessor.extractResponseBody(response)
     }
 
     @GetMapping("/user/{username}")
@@ -57,12 +53,12 @@ class RecognizerController {
     ): RecognizedPersonModel {
 
         val requestParamNameToFile =  Pair(PIC, file)
-        val multipartBody = buildMultiPartBody(listOf(requestParamNameToFile))
+        val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
 
         val url = "${RECOGNITION_USERNAME_API}/${username}"
 
-        val response = createRequest(url, multipartBody)
-        return extractResponseBody(response)
+        val response = requestProcessor.createRequest(url, multipartBody)
+        return requestProcessor.extractResponseBody(response)
     }
 
     @GetMapping("/pair")
@@ -70,55 +66,10 @@ class RecognizerController {
 
         val requestParamNameToFile1 =  Pair(PIC1, file1)
         val requestParamNameToFile2 =  Pair(PIC2, file2)
-        val multipartBody = buildMultiPartBody(listOf(requestParamNameToFile1, requestParamNameToFile2))
+        val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile1, requestParamNameToFile2))
         val url = RECOGNITION_PAIR_API
-        val response = createRequest(url, multipartBody)
-        return extractResponseBody(response)
+        val response = requestProcessor.createRequest(url, multipartBody)
+        return requestProcessor.extractResponseBody(response)
     }
 
-    private fun createRequest(url : String, multipartBody: MultipartBody) : Response {
-
-        val request = Request.Builder()
-            .url(url)
-            .post(multipartBody)
-            .build()
-
-        val okHttpClient = OkHttpClient()
-            .newBuilder()
-            .build()
-
-        return okHttpClient.newCall(request).execute()
-    }
-
-    private inline fun <reified T> extractResponseBody(resp: Response): T {
-
-        val jsonString = resp.body()?.string()
-        if (resp.isSuccessful) {
-            return jacksonObjectMapper().readerFor(T::class.java).readValue(jsonString)
-        } else {
-            val messageModel =
-                jacksonObjectMapper().readerFor(MessageModel::class.java).readValue<MessageModel>(jsonString)
-            throw RecognitionException(messageModel.message, resp.code())
-        }
-    }
-
-}
-
-fun buildMultiPartBody(reqParamNamesToFiles: List<Pair<String, MultipartFile>>): MultipartBody {
-
-    val multipartBody = MultipartBody.Builder()
-        .setType(MultipartBody.FORM)
-
-    for (item in reqParamNamesToFiles) {
-        val reqParamName = item.first
-        val file = item.second
-        val fileBody = okhttp3.RequestBody.create(
-            MediaType.parse(
-                file.contentType!!
-            ), file.bytes
-        )
-        multipartBody.addFormDataPart(reqParamName, file.originalFilename, fileBody)
-    }
-
-    return multipartBody.build()
 }
