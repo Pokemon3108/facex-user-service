@@ -41,7 +41,7 @@ class RecognizerController @Autowired constructor(
         val requestParamNameToFile =  Pair(PIC, file)
         val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
 
-        val url = "${RECOGNITION_API}/${group}"
+        val url = RECOGNITION_API.format(group)
         val response = requestProcessor.createRequest(url, multipartBody)
         return requestProcessor.extractResponseBody(response)
     }
@@ -55,7 +55,7 @@ class RecognizerController @Autowired constructor(
         val requestParamNameToFile =  Pair(PIC, file)
         val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
 
-        val url = "${RECOGNITION_USERNAME_API}/${username}"
+        val url = RECOGNITION_USERNAME_API.format(username)
 
         val response = requestProcessor.createRequest(url, multipartBody)
         return requestProcessor.extractResponseBody(response)
