@@ -1,8 +1,8 @@
 package by.daryazaleuskaya.impl
 
-import by.daryazaleuskaya.datamodel.PersonCardDataModel
+import by.daryazaleuskaya.datamodel.PersonDataModel
 import by.daryazaleuskaya.datamodel.SystemUserDataModel
-import by.daryazaleuskaya.dto.PersonCardDto
+import by.daryazaleuskaya.dto.PersonDto
 import by.daryazaleuskaya.dto.SystemUserDto
 
 fun SystemUserDto.toSystemUserDataModel() = SystemUserDataModel(
@@ -25,22 +25,14 @@ fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
     company = company
 )
 
-fun PersonCardDto.toPersonCardDataModel() = PersonCardDataModel(
+fun PersonDto.toPersonDataModel() = PersonDataModel(
     id = id,
     name = name,
-    surname = surname,
-    gender = gender,
-    birthdate = birthdate,
-    country = country,
-    city = city
+    surname = surname
 )
 
-fun PersonCardDataModel.toPersonCardDto() = PersonCardDto(
+fun PersonDataModel.toPersonDto() = PersonDto(
     id = id,
     name = name,
-    surname = surname,
-    gender = gender,
-    birthdate = birthdate,
-    country = country,
-    city = city
+    surname = surname
 )
