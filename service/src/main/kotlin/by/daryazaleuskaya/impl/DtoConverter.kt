@@ -28,11 +28,13 @@ fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
 fun PersonDto.toPersonDataModel() = PersonDataModel(
     id = id,
     name = name,
-    surname = surname
+    surname = surname,
+    group = group
 )
 
 fun PersonDataModel.toPersonDto() = PersonDto(
     id = id,
     name = name,
-    surname = surname
+    surname = surname,
+    group = group
 )

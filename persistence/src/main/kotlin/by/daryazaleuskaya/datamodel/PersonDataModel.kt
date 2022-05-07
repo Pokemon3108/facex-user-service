@@ -10,5 +10,6 @@ data class PersonDataModel(
     var id: String? = null,
 
     val name: String,
-    val surname: String
+    val surname: String,
+    var group : String? = null
 )

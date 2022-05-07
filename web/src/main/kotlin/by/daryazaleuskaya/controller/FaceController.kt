@@ -14,32 +14,32 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
 
 @RestController
-@RequestMapping("/api/v1")
-class PersonController @Autowired constructor(
+@RequestMapping("/api/v1/face")
+class FaceController @Autowired constructor(
     private val personService: PersonService,
     private val requestProcessor : RequestProcessor
 ) {
 
-    @Value("\${facex.upload.person.image.api}")
-    private lateinit var UPLOAD_PERSON_IMAGE_API: String
+    @Value("\${facex.upload.face.image.api}")
+    private lateinit var UPLOAD_FACE_IMAGE_API: String
 
     private val PIC : String= "pic"
 
-    @PostMapping("/person/{username}")
+    @PostMapping("/{fullname}/group/{group}")
     @ResponseStatus(HttpStatus.CREATED)
     fun savePersonFace(
         @RequestParam("pic") file: MultipartFile,
-        @PathVariable(required = true) username: String
+        @PathVariable(required = true) fullname: String,
+        @PathVariable(required = true) group: String
     ): String? {
-
-        if (!personService.exists(username)) {
-
-        }
 
         val requestParamNameToFile =  Pair(PIC, file)
         val multipartBody = requestProcessor.buildMultiPartBody(listOf(requestParamNameToFile))
-        val url = UPLOAD_PERSON_IMAGE_API + "/${username}"
+        val url = UPLOAD_FACE_IMAGE_API.format(fullname, group)
         val response = requestProcessor.createRequest(url, multipartBody)
+        if (response.isSuccessful && !personService.exists(fullname, group)) {
+            personService.save(fullname, group)
+        }
         return response.body()?.string()
 
     }

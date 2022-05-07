@@ -33,4 +33,11 @@ class DetectorController @Autowired constructor(
         val response = requestProcessor.createRequest(url, multipartBody)
         return requestProcessor.extractResponseBody(response)
     }
+
+    @GetMapping("/dec")
+    fun detectFace1(
+        @RequestParam("pic") file: MultipartFile
+    ) : String {
+        return "ddfd"
+    }
 }
