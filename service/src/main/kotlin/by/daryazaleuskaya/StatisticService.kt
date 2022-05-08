@@ -1,7 +1,9 @@
 package by.daryazaleuskaya
 
+import by.daryazaleuskaya.dto.PersonDto
+
 interface StatisticService {
 
-    fun addRecord(username : String)
+    fun addRecord(personDto: PersonDto)
 
 }

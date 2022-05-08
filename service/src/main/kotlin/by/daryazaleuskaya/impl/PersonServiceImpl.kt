@@ -19,14 +19,23 @@ class PersonServiceImpl @Autowired constructor(
     }
 
     override fun save(username: String, group : String) : PersonDto {
-        val personDataModel = buildPersonDataFromUserName(username)
-        personDataModel.group = group
+        val personDataModel = buildPersonDataModel(username, group)
         return personRepository.save(personDataModel).toPersonDto()
     }
 
     override fun exists(username : String, group : String) : Boolean {
         val personDataModel = buildPersonDataFromUserName(username)
         return personRepository.exists(Example.of(personDataModel))
+    }
+
+    override fun buildPersonDto(username: String, group: String): PersonDto {
+        return buildPersonDataModel(username, group).toPersonDto()
+    }
+
+    private fun buildPersonDataModel(username: String, group: String) : PersonDataModel {
+        val personDataModel = buildPersonDataFromUserName(username)
+        personDataModel.group = group
+        return personDataModel
     }
 
     private fun buildPersonDataFromUserName(username : String) : PersonDataModel {

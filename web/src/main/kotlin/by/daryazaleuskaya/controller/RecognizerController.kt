@@ -1,5 +1,7 @@
 package by.daryazaleuskaya.controller
 
+import by.daryazaleuskaya.PersonService
+import by.daryazaleuskaya.StatisticService
 import by.daryazaleuskaya.controller.processor.RequestProcessor
 import by.daryazaleuskaya.model.ImageComparisonModel
 import by.daryazaleuskaya.model.RecognizedPersonModel
@@ -16,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/v1/recognition")
 class RecognizerController @Autowired constructor(
-     private val requestProcessor: RequestProcessor
+     private val requestProcessor: RequestProcessor,
+     private val statisticService: StatisticService,
+     private val personService: PersonService
 ) {
 
     @Value("\${facex.image.recognition.api}")
@@ -43,13 +47,16 @@ class RecognizerController @Autowired constructor(
 
         val url = RECOGNITION_API.format(group)
         val response = requestProcessor.createRequest(url, multipartBody)
-        return requestProcessor.extractResponseBody(response)
+        val recognizedPersonModel : RecognizedPersonModel = requestProcessor.extractResponseBody(response)
+        processRecognitionStatistic(recognizedPersonModel, group)
+        return recognizedPersonModel
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/user/{username}/group/{group}")
     fun recognizeFaceByName(
         @RequestParam("pic") file: MultipartFile,
-        @PathVariable(required = true) username: String
+        @PathVariable(required = true) username: String,
+        @PathVariable(required = true) group: String
     ): RecognizedPersonModel {
 
         val requestParamNameToFile =  Pair(PIC, file)
@@ -58,7 +65,9 @@ class RecognizerController @Autowired constructor(
         val url = RECOGNITION_USERNAME_API.format(username)
 
         val response = requestProcessor.createRequest(url, multipartBody)
-        return requestProcessor.extractResponseBody(response)
+        val recognizedPersonModel : RecognizedPersonModel = requestProcessor.extractResponseBody(response)
+        processRecognitionStatistic(recognizedPersonModel, group)
+        return recognizedPersonModel
     }
 
     @GetMapping("/pair")
@@ -70,6 +79,14 @@ class RecognizerController @Autowired constructor(
         val url = RECOGNITION_PAIR_API
         val response = requestProcessor.createRequest(url, multipartBody)
         return requestProcessor.extractResponseBody(response)
+    }
+
+    private fun processRecognitionStatistic(recognizedPersonModel : RecognizedPersonModel, group : String) {
+
+        if (recognizedPersonModel.wasRecognized) {
+            val personDto = personService.buildPersonDto(recognizedPersonModel.name, group)
+            statisticService.addRecord(personDto)
+        }
     }
 
 }

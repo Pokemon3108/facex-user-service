@@ -1,8 +1,10 @@
 package by.daryazaleuskaya.impl
 
 import by.daryazaleuskaya.datamodel.PersonDataModel
+import by.daryazaleuskaya.datamodel.PersonStatisticDataModel
 import by.daryazaleuskaya.datamodel.SystemUserDataModel
 import by.daryazaleuskaya.dto.PersonDto
+import by.daryazaleuskaya.dto.PersonStatisticDto
 import by.daryazaleuskaya.dto.SystemUserDto
 
 fun SystemUserDto.toSystemUserDataModel() = SystemUserDataModel(
@@ -37,4 +39,16 @@ fun PersonDataModel.toPersonDto() = PersonDto(
     name = name,
     surname = surname,
     group = group
+)
+
+fun PersonStatisticDataModel.toPersonStatisticDto() = PersonStatisticDto(
+    id = id,
+    personDto = personDataModel.toPersonDto(),
+    attendanceTime = attendanceTime
+)
+
+fun PersonStatisticDto.toPersonStatisticDataModel() = PersonStatisticDataModel(
+    id = id,
+    personDataModel = personDto.toPersonDataModel(),
+    attendanceTime = attendanceTime
 )

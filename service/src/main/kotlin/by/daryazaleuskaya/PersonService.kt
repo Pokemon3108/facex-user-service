@@ -10,4 +10,6 @@ interface PersonService {
 
     fun exists(username : String, group : String) : Boolean
 
+    fun buildPersonDto(username : String, group : String) : PersonDto
+
 }
