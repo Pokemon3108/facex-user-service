@@ -19,4 +19,8 @@ class StatisticServiceImpl @Autowired constructor(
         personStatisticRepository.save(personStatisticDto.toPersonStatisticDataModel())
     }
 
+    override fun readAllBySurname(surname: String) : List<PersonStatisticDto> {
+        return personStatisticRepository.findAllByPersonDataModelSurname(surname).map { it.toPersonStatisticDto() }
+    }
+
 }
