@@ -6,13 +6,16 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.multipart.MultipartFile
 
 @Component
-class RequestProcessor {
+class RequestProcessor @Autowired constructor(
+    private val requestBuilderFactory: RequestBuilderFactory
+) {
 
     inline fun <reified T> extractResponseBody(resp: Response): T {
 
@@ -26,12 +29,9 @@ class RequestProcessor {
         }
     }
 
-    fun createRequest(url : String, multipartBody: MultipartBody) : Response {
+    fun createRequest(url : String, multipartBody: MultipartBody, requestType : RequestMethod = RequestMethod.POST) : Response {
 
-        val request = Request.Builder()
-            .url(url)
-            .post(multipartBody)
-            .build()
+        val request = requestBuilderFactory.createRequest(url, multipartBody, requestType)
 
         val okHttpClient = OkHttpClient()
             .newBuilder()
