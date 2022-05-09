@@ -19,7 +19,7 @@ interface RefreshTokenService {
      * @param username - the name of user
      * @return created token
      */
-    fun createRefreshToken(username: String): RefreshTokenDto
+    fun createRefreshTokenIfNotExists(username: String): RefreshTokenDto
 
     /**
      * Validates token

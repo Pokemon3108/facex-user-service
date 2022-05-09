@@ -20,6 +20,12 @@ class SystemUserServiceImpl @Autowired constructor(
         return userRepository.save(userModel).toSystemUserDto()
     }
 
+    override fun read(login: String): SystemUserDto {
+
+        return userRepository.findByLogin(login)?.toSystemUserDto()
+            ?: throw UsernameNotFoundException(login)
+    }
+
     override fun loadUserByUsername(username: String): UserDetails {
 
         return userRepository.findByLogin(username)?.toSystemUserDto()

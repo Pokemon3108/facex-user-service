@@ -7,4 +7,6 @@ import org.springframework.stereotype.Service
 interface SystemUserService {
 
     fun create(user : SystemUserDto) : SystemUserDto
+
+    fun read(login : String) : SystemUserDto
 }

@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository
 interface RefreshTokenRepository : MongoRepository<RefreshTokenDataModel, String> {
 
     fun findByToken(token : String) : RefreshTokenDataModel?
+
+    fun findByUserLogin(login : String) : RefreshTokenDataModel?
 }
