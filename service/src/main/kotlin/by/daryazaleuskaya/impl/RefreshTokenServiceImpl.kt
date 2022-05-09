@@ -46,8 +46,19 @@ class RefreshTokenServiceImpl @Autowired constructor(
         deleteTokenIfExpires(tokenDto)
     }
 
-    override fun updateToken(tokenDto: RefreshTokenDto): RefreshTokenDto? {
-        TODO("Not yet implemented")
+    override fun updateToken(tokenDto: RefreshTokenDto): RefreshTokenDto {
+
+        val tokenFromDb = refreshTokenRepository.findByToken(tokenDto.token)
+
+        val newDateExpiration = Date.from(
+            LocalDateTime.now().plusMinutes(REFRESH_TOKEN_LIFE_TIME)
+                .atZone(ZoneId.systemDefault()).toInstant()
+        )
+        val newTokenContent = UUID.randomUUID().toString()
+        val updatedRefreshTokenDto =
+            RefreshTokenDto(id = tokenFromDb?.id, user = tokenDto.user, token = newTokenContent, expireDate = newDateExpiration)
+        refreshTokenRepository.save(updatedRefreshTokenDto.toRefreshTokenDataModel())
+        return updatedRefreshTokenDto
     }
 
     private fun createToken(username: String): RefreshTokenDto {
@@ -66,7 +77,7 @@ class RefreshTokenServiceImpl @Autowired constructor(
     /**
      * Delete token if it has been expired
      *
-     * @param token - to be checked and probably deleted
+     * @param tokenDto - to be checked and probably deleted
      */
     private fun deleteTokenIfExpires(tokenDto: RefreshTokenDto) {
 
