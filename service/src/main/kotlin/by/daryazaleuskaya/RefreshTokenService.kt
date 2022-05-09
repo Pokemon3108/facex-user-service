@@ -27,7 +27,7 @@ interface RefreshTokenService {
      * @param token
      * @param user - the potential owner of token
      */
-    fun validateToken(token: RefreshTokenDto, user: SystemUserDto?)
+    fun validateToken(token: RefreshTokenDto, user: SystemUserDto)
 
     /**
      * Updates token in storage
