@@ -1,3 +1,5 @@
 package by.daryazaleuskaya.exception
 
-class NoSystemUserException : Exception()
+class NoSystemUserException(
+    val username: String
+) : Exception()

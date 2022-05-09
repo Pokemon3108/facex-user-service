@@ -1,3 +1,4 @@
 package by.daryazaleuskaya.exception
 
-class RefreshTokenException : RuntimeException()
+class RefreshTokenException(val token: String, message: String)
+    : RuntimeException(message)

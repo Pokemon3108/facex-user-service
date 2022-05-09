@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface SystemUserRepository : MongoRepository<SystemUserDataModel, String> {
 
+    fun findByLogin(login : String) : SystemUserDataModel?
 }

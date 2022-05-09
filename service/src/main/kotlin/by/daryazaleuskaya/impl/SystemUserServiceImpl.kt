@@ -2,15 +2,17 @@ package by.daryazaleuskaya.impl
 
 import by.daryazaleuskaya.SystemUserService
 import by.daryazaleuskaya.dto.SystemUserDto
-import by.daryazaleuskaya.exception.NoSystemUserException
 import by.daryazaleuskaya.repos.SystemUserRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
 class SystemUserServiceImpl @Autowired constructor(
     private val userRepository: SystemUserRepository
-) : SystemUserService {
+) : SystemUserService, UserDetailsService {
 
     override fun create(user: SystemUserDto): SystemUserDto {
 
@@ -18,13 +20,9 @@ class SystemUserServiceImpl @Autowired constructor(
         return userRepository.save(userModel).toSystemUserDto()
     }
 
-    override fun read(id: String): SystemUserDto {
+    override fun loadUserByUsername(username: String): UserDetails {
 
-        val userDataModel =  userRepository.findById(id)
-        if (userDataModel.isPresent) {
-            return userDataModel.get().toSystemUserDto()
-        } else {
-            throw NoSystemUserException()
-        }
+        return userRepository.findByLogin(username)?.toSystemUserDto()
+            ?: throw UsernameNotFoundException(username)
     }
 }
