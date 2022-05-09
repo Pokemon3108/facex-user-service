@@ -28,7 +28,7 @@ open class JwtTokenProvider @Autowired constructor(
     private val AUTH_HEADER = "Authorization"
 
     @Value("\${security.jwt.token.expire-length-min}")
-    private var tokenLifeTime: Long = 240L
+    val tokenLifeTime: Long = 240L
 
     @Value("\${security.jwt.token.secret-key}")
     private lateinit var secretKey: String
@@ -39,7 +39,7 @@ open class JwtTokenProvider @Autowired constructor(
         secretKey = Base64.getEncoder().encodeToString(secretKey.toByteArray())
     }
 
-    open fun createToken(username: String?): String? {
+    open fun createToken(username: String?): String {
         val claims = Jwts.claims().setSubject(username)
         val userDetails = userService.loadUserByUsername(username)
         val roles = userDetails.authorities

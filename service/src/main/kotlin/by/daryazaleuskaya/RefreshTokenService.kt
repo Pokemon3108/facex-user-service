@@ -35,5 +35,5 @@ interface RefreshTokenService {
      * @param tokenDto - the token to be updated
      * @return - updated token
      */
-    fun updateToken(tokenDto: RefreshTokenDto): RefreshTokenDto?
+    fun updateToken(tokenDto: RefreshTokenDto): RefreshTokenDto
 }

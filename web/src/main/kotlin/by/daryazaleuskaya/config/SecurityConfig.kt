@@ -5,6 +5,7 @@ import by.daryazaleuskaya.security.JwtConfigurer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -43,7 +44,9 @@ open class SecurityConfig @Autowired constructor(
 
             .and()
             .authorizeRequests()
-
+            .antMatchers(HttpMethod.GET, "/api/v1/detection", "/api/v1/recognition/*", "/api/v1/statistic/*").authenticated()
+            .antMatchers("/api/v1/face/*", "/api/v1/auth/refreshToken").authenticated()
+            .antMatchers(HttpMethod.POST,"/api/v1/user", "/api/v1/auth").hasAnyRole("ANONYMOUS", "ADMIN")
 
             .anyRequest()
             .hasRole("ADMIN")
