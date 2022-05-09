@@ -3,14 +3,16 @@ package by.daryazaleuskaya.security
 import by.daryazaleuskaya.RefreshTokenService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.context.annotation.Lazy
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 
+
 @Component
 class RefreshTokenProvider @Autowired constructor(
-    private val refreshTokenService: RefreshTokenService,
+    @Lazy private val refreshTokenService: RefreshTokenService,
     @Qualifier("systemUserServiceImpl") private val userService: UserDetailsService
 ) {
 
