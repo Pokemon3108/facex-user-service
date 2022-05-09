@@ -10,6 +10,7 @@ data class SystemUserDataModel(
     val id: String?,
     val login: String,
     val password: String,
+    val authorities: Set<String>,
 
     val name: String,
     val surname: String,

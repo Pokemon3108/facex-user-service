@@ -15,4 +15,7 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-stdlib")
     implementation ("com.squareup.okhttp3:okhttp:3.14.6")
     implementation ("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.+")
+    implementation ("org.springframework.boot:spring-boot-starter-security")
+    implementation ("io.jsonwebtoken:jjwt:0.9.1")
+
 }

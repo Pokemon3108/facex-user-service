@@ -13,4 +13,5 @@ dependencies {
     implementation(project(":persistence"))
     implementation ("org.jetbrains.kotlin:kotlin-stdlib")
     implementation ("org.springframework.data:spring-data-mongodb")
+    implementation("org.springframework.security:spring-security-core:5.6.3")
 }

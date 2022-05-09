@@ -2,9 +2,11 @@ package by.daryazaleuskaya.impl
 
 import by.daryazaleuskaya.datamodel.PersonDataModel
 import by.daryazaleuskaya.datamodel.PersonStatisticDataModel
+import by.daryazaleuskaya.datamodel.RefreshTokenDataModel
 import by.daryazaleuskaya.datamodel.SystemUserDataModel
 import by.daryazaleuskaya.dto.PersonDto
 import by.daryazaleuskaya.dto.PersonStatisticDto
+import by.daryazaleuskaya.dto.RefreshTokenDto
 import by.daryazaleuskaya.dto.SystemUserDto
 
 fun SystemUserDto.toSystemUserDataModel() = SystemUserDataModel(
@@ -14,7 +16,8 @@ fun SystemUserDto.toSystemUserDataModel() = SystemUserDataModel(
     name = name,
     surname = surname,
     email = email,
-    company = company
+    company = company,
+    authorities = authorities
 )
 
 fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
@@ -24,7 +27,8 @@ fun SystemUserDataModel.toSystemUserDto() = SystemUserDto(
     name = name,
     surname = surname,
     email = email,
-    company = company
+    company = company,
+    authorities = authorities
 )
 
 fun PersonDto.toPersonDataModel() = PersonDataModel(
@@ -51,4 +55,18 @@ fun PersonStatisticDto.toPersonStatisticDataModel() = PersonStatisticDataModel(
     id = id,
     personDataModel = personDto.toPersonDataModel(),
     attendanceTime = attendanceTime
+)
+
+fun RefreshTokenDataModel.toRefreshTokenDto() = RefreshTokenDto(
+    id = id,
+    user = user.toSystemUserDto(),
+    token = token,
+    expireDate = expireDate
+)
+
+fun RefreshTokenDto.toRefreshTokenDataModel() = RefreshTokenDataModel(
+    id = id,
+    user = user.toSystemUserDataModel(),
+    token = token,
+    expireDate = expireDate
 )
