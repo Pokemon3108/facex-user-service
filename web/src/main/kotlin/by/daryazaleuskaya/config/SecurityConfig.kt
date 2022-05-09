@@ -1,6 +1,7 @@
 package by.daryazaleuskaya.config
 
 import by.daryazaleuskaya.controller.handler.ExceptionHandlerFilter
+import by.daryazaleuskaya.security.JwtConfigurer
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,13 +14,18 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.authentication.logout.LogoutFilter
 
 @Configuration
 @EnableWebSecurity
 open class SecurityConfig @Autowired constructor(
     private val userService : UserDetailsService,
-    private val handlerFilter : ExceptionHandlerFilter
+    private val handlerFilter : ExceptionHandlerFilter,
+    private val jwtConfigurer: JwtConfigurer,
+    private val authPoint : AuthenticationEntryPoint,
+    private val accessDeniedHandler : AccessDeniedHandler
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
@@ -34,6 +40,21 @@ open class SecurityConfig @Autowired constructor(
             .csrf().disable()
             .addFilterBefore(handlerFilter, LogoutFilter::class.java)
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
+            .and()
+            .authorizeRequests()
+
+
+            .anyRequest()
+            .hasRole("ADMIN")
+
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(authPoint)
+            .accessDeniedHandler(accessDeniedHandler)
+
+            .and()
+            .apply(jwtConfigurer)
 
     }
 

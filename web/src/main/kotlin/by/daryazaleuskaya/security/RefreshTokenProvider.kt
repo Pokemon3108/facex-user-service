@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.stereotype.Component
 
+@Component
 class RefreshTokenProvider @Autowired constructor(
     private val refreshTokenService: RefreshTokenService,
     @Qualifier("systemUserServiceImpl") private val userService: UserDetailsService
@@ -18,7 +20,7 @@ class RefreshTokenProvider @Autowired constructor(
     }
 
     fun getAuthentication(token: String): Authentication {
-        
+
         val userDetails = userService.loadUserByUsername(getUsername(token))
         return UsernamePasswordAuthenticationToken(userDetails, "", userDetails.authorities)
     }

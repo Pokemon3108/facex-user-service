@@ -2,11 +2,13 @@ package by.daryazaleuskaya.security
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import javax.servlet.FilterChain
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
+@Component
 class TokenFilter @Autowired constructor(
     private val jwtTokenProvider: JwtTokenProvider,
     private val refreshTokenProvider: RefreshTokenProvider

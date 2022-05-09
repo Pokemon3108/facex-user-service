@@ -5,9 +5,11 @@ import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.PropertySource
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -15,6 +17,8 @@ import java.util.stream.Collectors
 import javax.annotation.PostConstruct
 import javax.servlet.http.HttpServletRequest
 
+@Component
+@PropertySource("classpath:application.properties")
 open class JwtTokenProvider @Autowired constructor(
     @Qualifier("systemUserServiceImpl") private val userService: UserDetailsService
 ) {
